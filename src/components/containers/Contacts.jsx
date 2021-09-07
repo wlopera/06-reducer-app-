@@ -1,37 +1,32 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import FormAdd from "../Form/FormAdd";
 import { ContactsReducer } from "../reducers/ContactsReducer";
 import TableContacts from "./TableContacts";
 
-const contacts = [
-  {
-    id: "1234-sdfg",
-    name: "Leonel Messi",
-    number: "111111",
-  },
-  {
-    id: "4325-sdfg",
-    name: "Cristiano Rolnaldo",
-    number: "222222",
-  },
-  {
-    id: "6532-sdfg",
-    name: "Neymar Jr.",
-    number: "3333333",
-  },
-  {
-    id: "7654-sdfg",
-    name: "Juan Arango",
-    number: "444444",
-  },
-];
+const init = () => {
+  const contacts = localStorage.getItem("contacts");
+  return contacts ? JSON.parse(contacts) : [];
+};
 
 const Contacts = () => {
-  const [state, dispatch] = useReducer(ContactsReducer, contacts);
+  const [state, dispatch] = useReducer(ContactsReducer, [], init);
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("contacts", JSON.stringify(state));
+  }, [state]);
 
   return (
     <div className="container mt-3">
-      <FormAdd dispatch={dispatch} />
+      <button
+        onClick={() => setShowForm(!showForm)}
+        className="btn btn-success"
+      >
+        {showForm ? "Ocultar Formulario" : "Agregar Contacto"}
+      </button>
+
+      {showForm && <FormAdd dispatch={dispatch} />}
+
       <TableContacts contacts={state} dispatch={dispatch} />
     </div>
   );

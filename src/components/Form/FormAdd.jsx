@@ -21,6 +21,7 @@ const FormAdd = ({ dispatch }) => {
 
   const handleAdd = () => {
     dispatch(actionAdd);
+    setData({ name: "", number: "" });
   };
 
   return (
